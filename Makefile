@@ -10,7 +10,7 @@ PACTFLOW_CLI_COMMAND:=${PACT_CLI_DOCKER_RUN_COMMAND} ${PACTFLOW_CLI_COMMAND}
 ## ====================
 ## Demo Specific Example Variables
 ## ====================
-VERSION?=$(echo $(npx -y absolute-version) | sed 's/+//g; s/-//g')
+# VERSION?=$(echo $(npx -y absolute-version) | sed 's/+//g; s/-//g')
 BRANCH?=$(shell git rev-parse --abbrev-ref HEAD)
 OAS_PATH=oas/products.yml
 REPORT_PATH?=output/report.md
@@ -45,7 +45,7 @@ publish_provider_contract:
 	${PACTFLOW_CLI_COMMAND} publish-provider-contract \
       ${OAS_PATH} \
       --provider ${PACTICIPANT} \
-      --provider-app-version ${VERSION} \
+      --provider-app-version $(echo $(npx -y absolute-version) | sed 's/+//g; s/-//g') \
       --branch ${BRANCH} \
       --content-type application/yaml \
       --verification-exit-code=${EXIT_CODE} \
@@ -81,13 +81,13 @@ no_deploy:
 
 can_i_deploy: 
 	@echo "\n========== STAGE: can-i-deploy? 🌉 ==========\n"
-	${PACT_BROKER_CLI_COMMAND} can-i-deploy --pacticipant ${PACTICIPANT} --version ${VERSION} --to-environment production
+	${PACT_BROKER_CLI_COMMAND} can-i-deploy --pacticipant ${PACTICIPANT} --version $(echo $(npx -y absolute-version) | sed 's/+//g; s/-//g') --to-environment production
 
 deploy_app:
 	@echo "\n========== STAGE: deploy 🚀 ==========\n"
 	@echo "Deploying to prod"
 
 record_deployment: 
-	@${PACT_BROKER_CLI_COMMAND} record_deployment --pacticipant ${PACTICIPANT} --version ${VERSION} --environment production
+	@${PACT_BROKER_CLI_COMMAND} record_deployment --pacticipant ${PACTICIPANT} --version $(echo $(npx -y absolute-version) | sed 's/+//g; s/-//g') --environment production
 
 .PHONY: all test clean
