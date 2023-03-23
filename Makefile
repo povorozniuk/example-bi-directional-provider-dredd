@@ -10,7 +10,7 @@ PACTFLOW_CLI_COMMAND:=${PACT_CLI_DOCKER_RUN_COMMAND} ${PACTFLOW_CLI_COMMAND}
 ## ====================
 ## Demo Specific Example Variables
 ## ====================
-VERSION?=$(shell npx -y absolute-version)
+VERSION?=$(echo $(npx -y absolute-version) | sed 's/+//g; s/-//g')
 BRANCH?=$(shell git rev-parse --abbrev-ref HEAD)
 OAS_PATH=oas/products.yml
 REPORT_PATH?=output/report.md
